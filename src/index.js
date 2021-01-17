@@ -18,7 +18,7 @@ import {createStore} from 'redux';
 import {Provider, connect} from 'react-redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import rootReducer from './reducers';
-import {setUser} from './actions';
+import {setUser, clearUser} from './actions';
 
 const store = createStore(rootReducer, composeWithDevTools());
 
@@ -30,6 +30,9 @@ class Root extends React.Component {
 				//console.log(user);
 				this.props.setUser(user);
 				this.props.history.push('/');
+			} else {
+				this.props.history.push('/login');
+				this.props.clearUser();
 			}
 		});
 	}
@@ -52,7 +55,7 @@ const mapStateFromMProps = state => ({
 const RootWithAuth = withRouter(
 	connect(
 		mapStateFromMProps, 
-		{setUser}
+		{setUser, clearUser}
 	)(Root)
 );
 
