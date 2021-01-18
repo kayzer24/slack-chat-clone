@@ -73,7 +73,7 @@ class Register extends React.Component {
 					console.log(createdUser);
 					createdUser.user.updateProfile({
 						displayName: this.state.username,
-						photoURL: `http://gravatar.com/avatar/${createdUser.user.email}?d=identicon`
+						photoURL: `https://gravatar.com/avatar/${createdUser.user.email}?d=identicon`
 					})
 					.then(() => {
 						this.saveUser(createdUser).then(() => {
