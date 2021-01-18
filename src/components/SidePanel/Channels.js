@@ -133,7 +133,7 @@ class Channels extends React.Component {
 					{this.displayChannels(channels)}
 				</Menu.Menu>
 
-				{/*Add chanel modal*/}
+				{/*Add channel modal*/}
 				<Modal basic open={modal} onClose={this.closeModal}>
 					<Modal.Header>Add a channel</Modal.Header>
 					<Modal.Content>
