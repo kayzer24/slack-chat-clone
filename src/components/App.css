@@ -17,6 +17,12 @@ body,
 	overflow-y: scroll;
 }
 
+
+/* sidepanel.js */
+.menu {
+	padding-bottom: 2em;
+}
+
 /* MessagesForm.js */
 .message__form {
 	position: fixed !important;
