@@ -1,5 +1,7 @@
 import React from 'react';
 import firebase from '../../firebase';
+import {connect} from 'react-redux';
+import {setColors} from '../../actions';
 import {Sidebar, Menu, Divider, Button, Modal, Icon, Label, Segment} from 'semantic-ui-react';
 import { SliderPicker } from 'react-color';
 
@@ -9,7 +11,26 @@ class ColorPanel extends React.Component {
 		primary: '',
 		secondary: '',
 		user: this.props.currentUser,
-		usersRef: firebase.database().ref('users')
+		usersRef: firebase.database().ref('users'),
+		userColors: []
+	}
+
+	componentDidMount() {
+		if (this.state.user) {
+			this.addListeners(this.state.user.uid);
+		}
+	}
+
+	addListeners = userId => {
+		let userColors = [];
+		this.state.usersRef
+			.child(`${userId}/colors`)
+			.on('child_added', snap => {
+				userColors.unshift(snap.val());
+				this.setState({
+					userColors
+				});
+			})
 	}
 
 	handleChangePrimary = color => this.setState({ primary: color.hex});
@@ -37,12 +58,31 @@ class ColorPanel extends React.Component {
 		.catch(err => console.error(err));
 	}
 
+	displayUserColors = colors => (
+		colors.length > 0 && 
+		colors.map((color, i) => (
+			<React.Fragment key={i}>
+				<Divider />
+				<div 
+					className="color__container" 
+					onClick={() => this.props.setColors(color.primary, color.secondary)}
+				>
+					<div className="color__square" style={{ background: color.primary }}>
+						<div className="color__overlay" style={{ background: color.secondary }}>
+
+						</div>
+					</div>
+				</div>
+			</React.Fragment>
+		))
+	)
+
 	openModal = () => this.setState({ modal: true });
 
 	closeModal = () => this.setState({ modal: false });
 
 	render()	 {
-		const {modal, primary, secondary} = this.state;
+		const {modal, primary, secondary, userColors} = this.state;
 
 		return (
 			<Sidebar
@@ -55,6 +95,7 @@ class ColorPanel extends React.Component {
 			>
 				<Divider />
 				<Button icon="add" size="small" color="blue" onClick={this.openModal}/>
+				{this.displayUserColors(userColors)}
 
 				{/* Color Picker Modal*/}
 				<Modal basic open={modal} onClose={this.closeModal}>
@@ -87,4 +128,4 @@ class ColorPanel extends React.Component {
 	}
 }
 
-export default ColorPanel;
+export default connect(null, { setColors })(ColorPanel);
