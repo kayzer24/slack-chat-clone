@@ -1,11 +1,17 @@
 import React from 'react';
 import firebase from '../../firebase';
-import {Grid, Header, Icon, Dropdown, Image} from 'semantic-ui-react';
+import {Grid, Header, Icon, Dropdown, Image, Modal, Input, Button} from 'semantic-ui-react';
 
+// Prettier ignore
 class UserPanel extends React.Component {
 	state = {
-		user: this.props.currentUser
+		user: this.props.currentUser,
+		modal: false
 	};
+
+	openModal = () => this.setState({ modal:true });
+
+	closeModal = () => this.setState({ modal:false });
 
 	dropdownOptions = () => [
 		{
@@ -15,7 +21,7 @@ class UserPanel extends React.Component {
 		},
 		{
 			key: 'avatar',
-			text: <span>Change avatar</span>,
+			text: <span onClick={this.openModal}>Change avatar</span>,
 
 		},
 		{
@@ -34,7 +40,7 @@ class UserPanel extends React.Component {
 	}
 
 	render() {
-		const {user} = this.state;
+		const {user, modal} = this.state;
 		const {primaryColor} = this.props;
 		
 		return (
@@ -59,6 +65,44 @@ class UserPanel extends React.Component {
 							</Dropdown>
 						</Header>
 					</Grid.Row>
+
+					{/* change user avatar modal */}
+					<Modal basic open={modal} onClose={this.closeModal}>
+						<Modal.Header>Change Avatar</Modal.Header>
+						<Modal.Content>
+							<Input 
+								fluid
+								type="file"
+								label="New avatar"
+								name="previewImage"
+							/>
+
+							<Grid centred stackable columns={2}>
+								<Grid.Row centred>
+									<Grid.Column className="ui center aligned grid">
+										{/* Image Preview*/}
+									</Grid.Column>			
+								</Grid.Row>
+								<Grid.Column>
+									{/* Cropped Image Preview*/}
+								</Grid.Column>
+							</Grid>
+						</Modal.Content>
+
+						<Modal.Actions>
+							<Button color="green" inverted>
+								<Icon name="save" /> Change Avatar
+							</Button>
+
+							<Button color="green" inverted>
+								<Icon name="image" /> Preview
+							</Button>
+
+							<Button color="red" inverted onClick={this.closeModal}>
+								<Icon name="remove" /> Cancel
+							</Button>
+						</Modal.Actions>
+					</Modal>
 				</Grid.Column>
 			</Grid>
 		);
